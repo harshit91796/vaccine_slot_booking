@@ -64,13 +64,16 @@ async function getPost(req,res){
 async function likePost(req,res){
     try {
         const post = await Post.findById(req.params.id)
+        console.log(post)
+        console.log(req.body.userId)
         if(!post.likes.includes(req.body.userId)){
             await post.updateOne({ $push : {likes : req.body.userId} }); 
             res.status(200).send({msg : "the post has been liked"}) 
         }
         else{
             await post.updateOne({ $pull : {likes : req.body.userId} }); 
-        }  res.status(200).send({msg : "the post has been disliked"})
+         res.status(200).send({msg : "the post has been disliked"})
+        }
     } catch (error) {
         res.status(500).send({ msg: error.message });
     }

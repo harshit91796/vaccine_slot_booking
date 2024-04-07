@@ -27,7 +27,7 @@ async function Login(req,res){
      if(hash){
        const token = jwt.sign({userId : user._id},process.env.secret_key)
        res.setHeader('X-api-key',token)
-       res.status(200).send({status : true, data : token ,message : "user is logged in"})
+       res.status(200).send({status : true, data : user ,message : "user is logged in"})
      }
      
     } catch (error) {
@@ -174,4 +174,26 @@ async function Login(req,res){
 
 }
 
-module.exports = {register,Login,update,deleteUser,getUser,follow,unFollow}
+// search user
+
+async function userSearch(req, res) {
+   try {
+      console.log('Received username:', req.query.username);
+      const username = req.query.username;
+  
+      if (!username) {
+        return res.status(400).json({ error: 'Username is required for search.' });
+      }
+  
+      // Use a MongoDB query to search for users based on the username
+      const users = await User.find({ username: { $regex: new RegExp(username), $options: 'i' } });
+  
+      res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+ };
+ 
+
+module.exports = {register,Login,update,deleteUser,getUser,follow,unFollow,userSearch}
