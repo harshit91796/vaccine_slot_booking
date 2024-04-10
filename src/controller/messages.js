@@ -1,6 +1,6 @@
 const Message = require('../model/Message')
 
-//add
+//add message
 
 
 async function message(req,res) {
